@@ -1,0 +1,15 @@
+INSERT INTO public.project(
+            id, date_of_last_edition, name, registration_date)
+    VALUES (1, '2019-07-15 09:14:00.21', 'ProjectOne', '2019-07-15 09:14:00.21');
+
+INSERT INTO public.project(
+            id, date_of_last_edition, name, registration_date)
+    VALUES (2, '2019-07-15 09:14:00.21', 'ProjectTwo', '2019-07-15 09:14:00.21');
+    
+INSERT INTO public.project(
+            id, date_of_last_edition, name, registration_date)
+    VALUES (3, '2019-07-15 09:14:00.21', 'ProjectThree', '2019-07-15 09:14:00.21');
+    
+INSERT INTO public.project(
+            id, date_of_last_edition, name, registration_date)
+    VALUES (4, '2019-07-15 09:14:00.21', 'ProjectFour', '2019-07-15 09:14:00.21');    

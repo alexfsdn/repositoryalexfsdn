@@ -1,0 +1,40 @@
+INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (1, 'alex@gmail.com', 1);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (2, 'alex2@gmail.com', 1);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (3, 'alex3@gmail.com', 1);
+    
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (4, 'aline@gmail.com', 2);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (5, 'aline@gmail.com', 2);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (6, 'alexandre@gmail.com', 3);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (7, 'bruna@gmail.com', 4);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (8, 'barbara@gmail.com', 5);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (9, 'carlos@gmail.com', 6);
+    
+    INSERT INTO public.email(
+            id, email_name, id_person)
+    VALUES (10, 'carlos2@gmail.com', 6);
