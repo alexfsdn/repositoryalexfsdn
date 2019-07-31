@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -32,6 +33,7 @@ public class Person implements Serializable {
 	private Long id;
 
 	@NotNull
+	@NotEmpty
 	@Column(name = "name_person")
 	private String namePerson;
 
@@ -47,7 +49,7 @@ public class Person implements Serializable {
 	@NotNull
 	private Timestamp dateOfLastEdition;
 
-	@OneToMany(mappedBy = "person", fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "person", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Email> emails = new ArrayList<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -88,28 +90,56 @@ public class Person implements Serializable {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getNamePerson() {
 		return namePerson;
+	}
+
+	public void setNamePerson(String namePerson) {
+		this.namePerson = namePerson;
 	}
 
 	public int getAge() {
 		return age;
 	}
 
-	public Timestamp getDateOfLastEdition() {
-		return dateOfLastEdition;
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	public Timestamp getRegistrationDate() {
 		return registrationDate;
 	}
 
+	public void setRegistrationDate(Timestamp registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+
+	public Timestamp getDateOfLastEdition() {
+		return dateOfLastEdition;
+	}
+
+	public void setDateOfLastEdition(Timestamp dateOfLastEdition) {
+		this.dateOfLastEdition = dateOfLastEdition;
+	}
+
 	public List<Email> getEmails() {
 		return emails;
 	}
 
+	public void setEmails(List<Email> emails) {
+		this.emails = emails;
+	}
+
 	public List<Project> getProjects() {
 		return projects;
+	}
+
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
 	}
 
 }

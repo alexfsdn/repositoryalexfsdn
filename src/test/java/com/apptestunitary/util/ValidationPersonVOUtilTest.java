@@ -30,12 +30,12 @@ public class ValidationPersonVOUtilTest {
 	@Before
 	public void setUp() {
 		emailsVOs = new ArrayList<>();
-	}
+	}	
 
 	@Test
 	public void personIsValidShouldNotEmptyPerson() {
-		final PersonVO PERSON_VO = null;
-		boolean result = ValidationPersonVOUtil.personIsValid(PERSON_VO);
+		final PersonVO PERSON_VO_NULL = null;
+		boolean result = ValidationPersonVOUtil.personIsValid(PERSON_VO_NULL);
 
 		assertFalse(result);
 	}

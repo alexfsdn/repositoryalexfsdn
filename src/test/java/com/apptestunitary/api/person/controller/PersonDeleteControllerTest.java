@@ -16,7 +16,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.web.client.RestClientException;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.PersonURIEnum;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
@@ -53,7 +52,7 @@ public class PersonDeleteControllerTest extends AppTestUnitaryApplicationTests {
 	public void mustDeletePerson() throws RestClientException, URISyntaxException {
 
 		final Long ID_PERSON = personSaved.getId();
-		final URI URI = new URI(BaseUrlEnum.URL_BASE.getUrl() + PersonURIEnum.URL_PERSON.getUrl());
+		final URI URI = new URI(PersonURIEnum.URL_PERSON.getUrl());
 
 		restTemplate.delete(URI + "" + ID_PERSON);
 

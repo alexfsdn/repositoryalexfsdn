@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.web.client.RestClientException;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.PersonURIEnum;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
-import com.apptestunitary.service.EmailService;
+import com.apptestunitary.repository.PersonRepository;
 import com.apptestunitary.service.PersonService;
 import com.apptestunitary.util.EmailVOUtil;
 import com.apptestunitary.vo.EmailVO;
@@ -39,10 +39,10 @@ public class PersonPutControllerTest extends AppTestUnitaryApplicationTests {
 	@Autowired
 	private PersonService personService;
 
-	@Autowired
-	private EmailService emailService;
-
 	private Person personSaved;
+
+	@Autowired
+	private PersonRepository personRepository;
 
 	@Before
 	public void setUp() throws ParseException {
@@ -59,8 +59,11 @@ public class PersonPutControllerTest extends AppTestUnitaryApplicationTests {
 
 		Person personToUpdate = new Person(NAME, AGE, emails);
 		personSaved = personService.save(personToUpdate);
-		personSaved.getEmails().clear();
-		personSaved.getEmails().addAll(emailService.findEmailsByIdPerson(personSaved.getId()));
+	}
+
+	@After
+	public void end() {
+		personRepository.deleteAll();
 	}
 
 	@Test
@@ -84,19 +87,19 @@ public class PersonPutControllerTest extends AppTestUnitaryApplicationTests {
 		final int EMAIL_SIZE_WILL_DE_THREE = 3;
 
 		final PersonVO PERSON_VO = new PersonVO(ID_PERSON, NAME, AGE, REGISTRATION_DATE, emailsVOs);
-		final URI URI = new URI(BaseUrlEnum.URL_BASE.getUrl() + PersonURIEnum.URL_PERSON.getUrl());
+		final URI URI = new URI(PersonURIEnum.URL_PERSON.getUrl());
 
 		restTemplate.put(URI, PERSON_VO);
 
 		Optional<Person> personUpdated = personService.findPerson(ID_PERSON);
 
 		assertTrue(personUpdated.isPresent());
-		assertThat(personUpdated.get().getNamePerson(), is(NAME));
-		assertThat(personUpdated.get().getAge(), is(AGE));
+		assertThat(NAME, is(personUpdated.get().getNamePerson()));
+		assertThat(AGE, is(personUpdated.get().getAge()));
 		assertTrue(personUpdated.get().getDateOfLastEdition().after(DATA_OF_LAST_EDITION));
 		assertFalse(personUpdated.get().getDateOfLastEdition().getTime() == REGISTRATION_DATE.getTime());
 		assertNotNull(personUpdated.get().getEmails());
-		assertThat(personUpdated.get().getEmails().size(), is(EMAIL_SIZE_WILL_DE_THREE));
+		assertThat(EMAIL_SIZE_WILL_DE_THREE, is(personUpdated.get().getEmails().size()));
 		personUpdated.get().getEmails().forEach(e -> {
 			assertTrue(e.getEmailName().toLowerCase().contains(EMAIL_NEW.toLowerCase())
 					|| e.getEmailName().toLowerCase().contains(EMAIL_OLD_BUT_UPDATED.toLowerCase())

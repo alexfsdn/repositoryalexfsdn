@@ -42,12 +42,12 @@ public class PersonUtilTest {
 		Person person = PersonUtil.buildPerson(personVO);
 
 		assertNotNull(person);
-		assertThat(person.getId(), is(personVO.getId()));
-		assertThat(person.getNamePerson(), is(personVO.getNamePerson()));
-		assertThat(person.getAge(), is(personVO.getAge()));
-		assertThat(person.getRegistrationDate().getTime(), is(personVO.getRegistrationDate().getTime()));
+		assertThat(personVO.getId(), is(person.getId()));
+		assertThat(personVO.getNamePerson(), is(person.getNamePerson()));
+		assertThat(personVO.getAge(), is(person.getAge()));
+		assertThat(personVO.getRegistrationDate().getTime(), is(person.getRegistrationDate().getTime()));
 		assertTrue(person.getDateOfLastEdition().after(AGORA));
-		assertThat(person.getEmails().size(), is(personVO.getEmailsVO().size()));
+		assertThat(personVO.getEmailsVO().size(), is(person.getEmails().size()));
 		person.getEmails().forEach(e -> {
 			assertTrue(e.getEmailName().toLowerCase().equals(EMAIL_NAME_1.toLowerCase())
 					|| e.getEmailName().toLowerCase().equals(EMAIL_NAME_2.toLowerCase()));
@@ -93,11 +93,11 @@ public class PersonUtilTest {
 		Person person = PersonUtil.buildPerson(personVO);
 
 		assertNotNull(person);
-		assertThat(person.getNamePerson(), is(personVO.getNamePerson()));
-		assertThat(person.getAge(), is(personVO.getAge()));
+		assertThat(personVO.getNamePerson(), is(person.getNamePerson()));
+		assertThat(personVO.getAge(), is(person.getAge()));
 		assertTrue(person.getRegistrationDate().after(AGORA));
 		assertTrue(person.getDateOfLastEdition().after(AGORA));
-		assertThat(person.getEmails().size(), is(personVO.getEmailsVO().size()));
+		assertThat(personVO.getEmailsVO().size(), is(person.getEmails().size()));
 		person.getEmails().forEach(e -> {
 			assertTrue(e.getEmailName().toLowerCase().equals(EMAIL_NAME_1.toLowerCase())
 					|| e.getEmailName().toLowerCase().equals(EMAIL_NAME_2.toLowerCase()));

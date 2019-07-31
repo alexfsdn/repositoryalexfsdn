@@ -32,6 +32,7 @@ public class ProjectService {
 		Project projectSaved = projectRepository.save(project);
 		if (project.getPeople() != null && project.getPeople().size() > 0) {
 			personProjectService.savePersonProject(projectSaved, project.getPeople());
+			
 		}
 		return projectSaved;
 	}

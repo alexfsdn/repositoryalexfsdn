@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.ProjectURIEnum;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
+import com.apptestunitary.repository.PersonProjectRepository;
+import com.apptestunitary.repository.ProjectRepository;
 import com.apptestunitary.service.PersonService;
 import com.apptestunitary.util.PersonVOUtil;
 import com.apptestunitary.vo.PersonVO;
@@ -41,6 +43,12 @@ public class ProjectSaveControllerTest extends AppTestUnitaryApplicationTests {
 	@Autowired
 	private PersonService personService;
 
+	@Autowired
+	private ProjectRepository projectRepository;
+
+	@Autowired
+	private PersonProjectRepository personProjectRepository;
+
 	private URI uri;
 
 	private PersonVO person1;
@@ -53,7 +61,13 @@ public class ProjectSaveControllerTest extends AppTestUnitaryApplicationTests {
 	@Before
 	public void setUp() throws URISyntaxException {
 		getReady();
-		uri = new URI(BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_PROJECT.getUrl());
+		uri = new URI(ProjectURIEnum.URL_PROJECT.getUrl());
+	}
+
+	@After
+	public void end() {
+		personProjectRepository.deleteAll();
+		projectRepository.deleteAll();
 	}
 
 	@Test
@@ -92,12 +106,12 @@ public class ProjectSaveControllerTest extends AppTestUnitaryApplicationTests {
 		ProjectVO projectVOSaved = result.getBody();
 
 		assertThat(HttpStatus.OK, is(result.getStatusCode()));
-		assertThat(projectVOSaved.getPeopleVOs().size(), is(PEOPLE_VO.size()));
+		assertThat(PEOPLE_VO.size(), is(projectVOSaved.getPeopleVOs().size()));
 	}
 
 	@Test
 	public void saveProjects() throws URISyntaxException {
-		final URI URI = new URI(BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_PROJECT_SAVE_LIST.getUrl());
+		final URI URI = new URI(ProjectURIEnum.URL_PROJECT_SAVE_LIST.getUrl());
 		final ProjectVO P1 = new ProjectVO("Project 1 API Rest");
 		final ProjectVO P2 = new ProjectVO("Project 2 API Rest");
 		final ProjectVO P3 = new ProjectVO("Project 3 API Rest");
@@ -119,7 +133,7 @@ public class ProjectSaveControllerTest extends AppTestUnitaryApplicationTests {
 
 		assertThat(HttpStatus.OK, is(result.getStatusCode()));
 		assertNotNull(projectsSaved);
-		assertThat(projectsSaved.size(), is(projects.size()));
+		assertThat(projects.size(), is(projectsSaved.size()));
 		projectsSaved.forEach(project -> {
 			assertNotNull(project.getId());
 			assertThat(project.getId() > 0);

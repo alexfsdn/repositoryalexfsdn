@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.apptestunitary.AppTestUnitaryApplicationTests;
+import com.apptestunitary.AppTests;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
 import com.apptestunitary.model.PersonProject;
@@ -20,7 +20,7 @@ import com.apptestunitary.service.PersonProjectService;
 import com.apptestunitary.service.PersonService;
 import com.apptestunitary.service.ProjectService;
 
-public class ProjectServiceDeleteTest extends AppTestUnitaryApplicationTests {
+public class ProjectServiceDeleteTest extends AppTests {
 
 	@Autowired
 	private ProjectService projectService;
@@ -53,10 +53,11 @@ public class ProjectServiceDeleteTest extends AppTestUnitaryApplicationTests {
 	@Test
 	public void mustDeletePersonByIdProject() {
 		Project projectSaved = projectService.save(project);
-		projectService.deleteById(project.getId());
+		final Long ID_PROJECT = projectSaved.getId();
+		projectService.deleteById(ID_PROJECT);
 
-		Optional<Project> projectRemoved = projectService.findProject(projectSaved.getId());
-		Optional<List<PersonProject>> personProjects = personProjectService.findByIdProject(projectSaved.getId());
+		Optional<Project> projectRemoved = projectService.findProject(ID_PROJECT);
+		Optional<List<PersonProject>> personProjects = personProjectService.findByIdProject(ID_PROJECT);
 		assertFalse(projectRemoved.isPresent());
 		assertFalse(personProjects.isPresent());
 	}

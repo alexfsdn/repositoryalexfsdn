@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.PersonURIEnum;
 import com.apptestunitary.model.Person;
+import com.apptestunitary.repository.PersonRepository;
 import com.apptestunitary.vo.EmailVO;
 import com.apptestunitary.vo.PersonVO;
 
@@ -36,10 +37,18 @@ public class PersonSaveControllerTest extends AppTestUnitaryApplicationTests {
 
 	private URI uri;
 
+	@Autowired
+	private PersonRepository personRepository;
+
 	@Before
 	public void setUp() throws URISyntaxException {
 		emailsVOs = new ArrayList<>();
-		uri = new URI(BaseUrlEnum.URL_BASE.getUrl() + PersonURIEnum.URL_PERSON.getUrl());
+		uri = new URI(PersonURIEnum.URL_PERSON.getUrl());
+	}
+
+	@After
+	public void end() {
+		personRepository.deleteAll();
 	}
 
 	@Test
@@ -49,19 +58,17 @@ public class PersonSaveControllerTest extends AppTestUnitaryApplicationTests {
 		emailsVOs.add(new EmailVO("alex2@gmail.com"));
 		PersonVO personVO = new PersonVO(NAME, AGE, emailsVOs);
 
-		// ACT
 		ResponseEntity<PersonVO> result = restTemplate.postForEntity(uri, personVO, PersonVO.class);
 
 		PersonVO personVOSaved = result.getBody();
 
-		// ASSERT
 		assertThat(HttpStatus.OK, is(result.getStatusCode()));
 		assertNotNull(personVOSaved.getEmailsVO());
-		assertThat(personVOSaved.getNamePerson(), is(NAME));
-		assertThat(personVOSaved.getAge(), is(AGE));
+		assertThat(NAME, is(personVOSaved.getNamePerson()));
+		assertThat(AGE, is(personVOSaved.getAge()));
 		assertNotNull(personVOSaved.getEmailsVO().get(0));
-		assertThat(personVOSaved.getEmailsVO().get(0).getEmailName(), is(emailsVOs.get(0).getEmailName()));
-		assertThat(personVOSaved.getEmailsVO().get(1).getEmailName(), is(emailsVOs.get(1).getEmailName()));
+		assertThat(emailsVOs.get(0).getEmailName(), is(personVOSaved.getEmailsVO().get(0).getEmailName()));
+		assertThat(emailsVOs.get(1).getEmailName(), is(personVOSaved.getEmailsVO().get(1).getEmailName()));
 	}
 
 	@Test
@@ -73,7 +80,7 @@ public class PersonSaveControllerTest extends AppTestUnitaryApplicationTests {
 
 		ResponseEntity<Person> result = restTemplate.postForEntity(uri, personVO, Person.class);
 
-		assertEquals(result.getStatusCode(), HttpStatus.NOT_ACCEPTABLE);
+		assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getStatusCode());
 	}
 
 }

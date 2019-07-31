@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -28,6 +29,7 @@ public class Project implements Serializable {
 	private Long id;
 
 	@NotNull
+	@NotEmpty
 	private String name;
 
 	@Column(name = "registration_date")
@@ -38,7 +40,7 @@ public class Project implements Serializable {
 	@NotNull
 	private Timestamp dateOfLastEdition;
 
-	@ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "projects", fetch = FetchType.EAGER)
 	private List<Person> people = new ArrayList<>();
 
 	public Project(Long id, @NotNull String name, @NotNull Timestamp registrationDate, List<Person> people) {

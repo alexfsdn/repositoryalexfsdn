@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
 import com.apptestunitary.enums.DataFormatoEnum;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.PersonURIEnum;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
+import com.apptestunitary.repository.PersonRepository;
 import com.apptestunitary.service.PersonService;
 import com.apptestunitary.vo.PersonVO;
 
@@ -54,6 +55,9 @@ public class PersonGetControllerTest extends AppTestUnitaryApplicationTests {
 	private static Timestamp SECOND_PERIOD = null;
 
 	private Person personSaved;
+
+	@Autowired
+	private PersonRepository personRepository;
 
 	@Before
 	public void setUp() throws ParseException {
@@ -83,36 +87,41 @@ public class PersonGetControllerTest extends AppTestUnitaryApplicationTests {
 		SECOND_PERIOD = new Timestamp(simpleDateFormatForSecondPeriod.parse(DATE_FOR_SECOND_PERIOD).getTime());
 	}
 
+	@After
+	public void end() {
+		personRepository.deleteAll();
+	}
+
 	@Test
 	public void mustFindPersonById() throws RestClientException, URISyntaxException {
 
 		final Long ID_PERSON = personSaved.getId();
-		final URI URI = new URI(BaseUrlEnum.URL_BASE.getUrl() + PersonURIEnum.URL_PERSON.getUrl());
+		final URI URI = new URI(PersonURIEnum.URL_PERSON.getUrl());
 
 		ResponseEntity<PersonVO> result = restTemplate.getForEntity(URI + "" + ID_PERSON, PersonVO.class);
 
 		PersonVO personSaved = result.getBody();
 
 		assertNotNull(personSaved);
-		assertThat(personSaved.getId(), is(ID_PERSON));
+		assertThat(ID_PERSON, is(personSaved.getId()));
 	}
 
 	@Test
 	public void mustFindPersonByNamePerson() throws RestClientException, URISyntaxException {
 
 		final List<Person> PEOPLE = personService.findSearchingNamePerson(NAME_TO_SEARCH).get();
-		final URI URI = new URI(BaseUrlEnum.URL_BASE.getUrl() + PersonURIEnum.URL_GET_BY_NAME_PERSON.getUrl());
-
-		HttpEntity<PersonVO> personVO = null;
+		final URI URI = new URI(PersonURIEnum.URL_GET_BY_NAME_PERSON.getUrl());
+		final HttpEntity<PersonVO> PERSON_VO_NULL = null;
+		final ParameterizedTypeReference<List<PersonVO>> TYPE_LIST_OF_PEOPLE_VO = new ParameterizedTypeReference<List<PersonVO>>() {
+		};
 
 		ResponseEntity<List<PersonVO>> result = restTemplate.exchange(URI + "" + NAME_TO_SEARCH, HttpMethod.GET,
-				personVO, new ParameterizedTypeReference<List<PersonVO>>() {
-				});
+				PERSON_VO_NULL, TYPE_LIST_OF_PEOPLE_VO);
 
 		List<PersonVO> peopleVO = result.getBody();
 
 		assertNotNull(peopleVO);
-		assertThat(peopleVO.size(), is(PEOPLE.size()));
+		assertThat(PEOPLE.size(), is(peopleVO.size()));
 	}
 
 	@Test
@@ -122,8 +131,8 @@ public class PersonGetControllerTest extends AppTestUnitaryApplicationTests {
 		final List<Person> PEOPLE = personService
 				.findPersonByNameAndDateOfLastEdition(NAME_TO_SEARCH, FIRST_PERIOD, SECOND_PERIOD).get();
 
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(
-				BaseUrlEnum.URL_BASE.getUrl() + PersonURIEnum.URL_GET_BY_NAME_PERSON_AND_DATE_OF_LAST_EDITION.getUrl());
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(PersonURIEnum.URL_GET_BY_NAME_PERSON_AND_DATE_OF_LAST_EDITION.getUrl());
 
 		uriComponentsBuilder.queryParam(NAME_LABEL, NAME_TO_SEARCH);
 		uriComponentsBuilder.queryParam(FIRST_PERIOD_LABEL, FIRST_PERIOD.getTime());
@@ -150,20 +159,20 @@ public class PersonGetControllerTest extends AppTestUnitaryApplicationTests {
 		final List<Person> PEOPLE = personService
 				.findPersonByNameAndRegistrationDate(NAME_TO_SEARCH, FIRST_PERIOD, SECOND_PERIOD).get();
 
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(
-				BaseUrlEnum.URL_BASE.getUrl() + PersonURIEnum.URL_GET_BY_NAME_PERSON_AND_REGISTRATION_DATE.getUrl());
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(PersonURIEnum.URL_GET_BY_NAME_PERSON_AND_REGISTRATION_DATE.getUrl());
 
 		uriComponentsBuilder.queryParam(NAME_LABEL, NAME_TO_SEARCH);
 		uriComponentsBuilder.queryParam(FIRST_PERIOD_LABEL, FIRST_PERIOD.getTime());
 		uriComponentsBuilder.queryParam(SECOND_PERIOD_LABEL, SECOND_PERIOD.getTime());
 
 		final URI URI = uriComponentsBuilder.build().toUri();
+		final HttpEntity<PersonVO> PERSON_VO_NULL = null;
+		final ParameterizedTypeReference<List<PersonVO>> TYPE_LIST_OF_PEOPLE_VO = new ParameterizedTypeReference<List<PersonVO>>() {
+		};
 
-		HttpEntity<PersonVO> PERSON_VO = null;
-
-		ResponseEntity<List<PersonVO>> result = restTemplate.exchange(URI, HttpMethod.GET, PERSON_VO,
-				new ParameterizedTypeReference<List<PersonVO>>() {
-				});
+		ResponseEntity<List<PersonVO>> result = restTemplate.exchange(URI, HttpMethod.GET, PERSON_VO_NULL,
+				TYPE_LIST_OF_PEOPLE_VO);
 
 		List<PersonVO> peopleVO = result.getBody();
 

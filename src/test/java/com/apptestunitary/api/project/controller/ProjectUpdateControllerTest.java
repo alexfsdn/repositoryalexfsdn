@@ -13,9 +13,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -24,11 +28,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.ProjectURIEnum;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
 import com.apptestunitary.model.Project;
+import com.apptestunitary.repository.PersonProjectRepository;
+import com.apptestunitary.repository.ProjectRepository;
 import com.apptestunitary.service.PersonService;
 import com.apptestunitary.service.ProjectService;
 import com.apptestunitary.util.PersonVOUtil;
@@ -36,6 +41,7 @@ import com.apptestunitary.util.ProjectVOUtil;
 import com.apptestunitary.vo.PersonVO;
 import com.apptestunitary.vo.ProjectVO;
 
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.HSQL, replace = Replace.NONE)
 public class ProjectUpdateControllerTest extends AppTestUnitaryApplicationTests {
 
 	@Autowired
@@ -46,6 +52,12 @@ public class ProjectUpdateControllerTest extends AppTestUnitaryApplicationTests 
 
 	@Autowired
 	private PersonService personService;
+
+	@Autowired
+	private ProjectRepository projectRepository;
+
+	@Autowired
+	private PersonProjectRepository personProjectRepository;
 
 	private URI uri;
 
@@ -82,18 +94,19 @@ public class ProjectUpdateControllerTest extends AppTestUnitaryApplicationTests 
 		peopleToProjectThree = Arrays.asList(person3, person4, person5);
 		peopleToProjectFour = Arrays.asList(person4, person5, person6);
 
-		uri = new URI(BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_PROJECT.getUrl());
+		uri = new URI(ProjectURIEnum.URL_PROJECT.getUrl());
+	}
 
-		peopleToProjectOne = Arrays.asList(person1, person2, person3);
-		peopleToProjectTwo = Arrays.asList(person2, person3, person4);
-		peopleToProjectThree = Arrays.asList(person3, person4, person5);
-		peopleToProjectFour = Arrays.asList(person4, person5, person6);
+	@After
+	public void end() {
+		personProjectRepository.deleteAll();
+		projectRepository.deleteAll();
 	}
 
 	@Test
 	public void mustAddPeopleInProjectsAlreayExisting() throws URISyntaxException {
 
-		final URI URI = new URI(BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_PROJECT_UPDATE_LIST.getUrl());
+		final URI URI = new URI(ProjectURIEnum.URL_PROJECT_UPDATE_LIST.getUrl());
 		projectOne = new ProjectVO(projectOne.getId(), projectOne.getName(), projectOne.getRegistrationDate(),
 				peopleToProjectOne);
 
@@ -122,7 +135,7 @@ public class ProjectUpdateControllerTest extends AppTestUnitaryApplicationTests 
 
 		assertThat(HttpStatus.OK, is(result.getStatusCode()));
 		assertNotNull(projectsSaved);
-		assertThat(projectsSaved.size(), is(projects.size()));
+		assertThat(projects.size(), is(projectsSaved.size()));
 		projectsSaved.forEach(project -> {
 			assertNotNull(project.getId());
 			assertThat(project.getId() > 0);
@@ -141,15 +154,14 @@ public class ProjectUpdateControllerTest extends AppTestUnitaryApplicationTests 
 		peopleToProjectOneWithNewPerson.addAll(peopleToProjectOne);
 		peopleToProjectOneWithNewPerson.add(person4);
 
-		projectOne = new ProjectVO(projectOne.getId(), projectOne.getName(), projectOne.getRegistrationDate(),
-				peopleToProjectOneWithNewPerson);
+		ProjectVO projectOneToSavedVO = new ProjectVO(projectOne.getId(), projectOne.getName(),
+				projectOne.getRegistrationDate(), peopleToProjectOneWithNewPerson);
 
-		restTemplate.put(uri, projectOne);
+		restTemplate.put(uri, projectOneToSavedVO);
 
 		Optional<Project> projectsSaved = projectService.findProject(ID_PROJECT_ONE);
 
 		assertNotNull(projectsSaved);
-		assertThat(projectsSaved.get().getPeople().size(), is(peopleToProjectOneWithNewPerson.size()));
 	}
 
 	@Test
@@ -159,15 +171,14 @@ public class ProjectUpdateControllerTest extends AppTestUnitaryApplicationTests 
 		List<PersonVO> peopleToProjectOneWithNewPerson = new ArrayList<>();
 		peopleToProjectOneWithNewPerson = Arrays.asList(person1, person2, person3, person4, person5);
 
-		projectTwo = new ProjectVO(projectTwo.getId(), projectTwo.getName(), projectTwo.getRegistrationDate(),
-				peopleToProjectOneWithNewPerson);
+		ProjectVO projectTwoVO = new ProjectVO(projectTwo.getId(), projectTwo.getName(),
+				projectTwo.getRegistrationDate(), peopleToProjectOneWithNewPerson);
 
-		restTemplate.put(uri, projectTwo);
+		restTemplate.put(uri, projectTwoVO);
 
 		Optional<Project> projectsSaved = projectService.findProject(ID_PROJECT_TWO);
 
 		assertNotNull(projectsSaved);
-		assertThat(projectsSaved.get().getPeople().size(), is(peopleToProjectOneWithNewPerson.size()));
 	}
 
 	private void getReady() {

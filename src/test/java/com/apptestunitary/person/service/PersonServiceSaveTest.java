@@ -9,30 +9,30 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.TransactionSystemException;
 
-import com.apptestunitary.AppTestUnitaryApplicationTests;
+import com.apptestunitary.AppTests;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
+import com.apptestunitary.repository.PersonRepository;
 import com.apptestunitary.service.PersonService;
 
-public class PersonServiceSaveTest extends AppTestUnitaryApplicationTests {
+public class PersonServiceSaveTest extends AppTests {
 
 	@Autowired
 	private PersonService personService;
 
-	private List<Email> emails;
+	@Autowired
+	private PersonRepository personRepository;
+
+	private Person person;
 
 	@Before
 	public void setUp() {
-		emails = new ArrayList<Email>();
-	}
-
-	@Test
-	public void mustSavePersonWithEmails() {
+		List<Email> emails = new ArrayList<Email>();
 
 		final String EMAIL_NAME_1 = "alex@gmail.com";
 		final String EMAIL_NAME_2 = "alex2@gmail.com";
@@ -43,18 +43,31 @@ public class PersonServiceSaveTest extends AppTestUnitaryApplicationTests {
 		emails.add(new Email(EMAIL_NAME_1));
 		emails.add(new Email(EMAIL_NAME_2));
 
-		final int EMAIL_SIZE_WILL_DE_THREE = 2;
+		person = new Person(NAME, AGE, emails);
+	}
 
-		Person person = new Person(NAME, AGE, emails);
+	@After
+	public void end() {
+		personRepository.deleteAll();
+	}
+
+	@Test
+	public void mustSavePersonWithEmails() {
+
+		final String EMAIL_NAME_1 = person.getEmails().get(0).getEmailName();
+		final String EMAIL_NAME_2 = person.getEmails().get(1).getEmailName();
+
+		final int EMAIL_SIZE_WILL_DE_TWO = 2;
 
 		Person personSaved = personService.save(person);
 
+		assertTrue(personSaved.getId() > 0);
 		assertNotNull(personSaved.getEmails());
-		assertEquals(personSaved.getRegistrationDate().getTime(), person.getRegistrationDate().getTime());
-		assertEquals(personSaved.getDateOfLastEdition().getTime(), person.getDateOfLastEdition().getTime());
-		assertThat(personSaved.getNamePerson(), is(NAME));
-		assertThat(personSaved.getAge(), is(AGE));
-		assertThat(personSaved.getEmails().size(), is(EMAIL_SIZE_WILL_DE_THREE));
+		assertEquals(person.getRegistrationDate().getTime(), personSaved.getRegistrationDate().getTime());
+		assertEquals(person.getDateOfLastEdition().getTime(), personSaved.getDateOfLastEdition().getTime());
+		assertThat(person.getNamePerson(), is(personSaved.getNamePerson()));
+		assertThat(person.getAge(), is(personSaved.getAge()));
+		assertThat(EMAIL_SIZE_WILL_DE_TWO, is(personSaved.getEmails().size()));
 		personSaved.getEmails().forEach(email -> {
 			assertNotNull(email.getId());
 			assertNotNull(email.getEmailName());
@@ -63,9 +76,4 @@ public class PersonServiceSaveTest extends AppTestUnitaryApplicationTests {
 		});
 	}
 
-	@Test(expected = TransactionSystemException.class)
-	public void shouldNotSavePersonWithValuesNull() {
-		final Person PERSON_WITH_VALUES_NULL = new Person();
-		personService.save(PERSON_WITH_VALUES_NULL);
-	}
 }

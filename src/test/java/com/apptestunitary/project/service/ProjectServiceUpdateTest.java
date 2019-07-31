@@ -9,18 +9,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.apptestunitary.AppTestUnitaryApplicationTests;
+import com.apptestunitary.AppTests;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
 import com.apptestunitary.model.Project;
+import com.apptestunitary.repository.PersonProjectRepository;
+import com.apptestunitary.repository.ProjectRepository;
 import com.apptestunitary.service.PersonService;
 import com.apptestunitary.service.ProjectService;
 
-public class ProjectServiceUpdateTest extends AppTestUnitaryApplicationTests {
+public class ProjectServiceUpdateTest extends AppTests {
 
 	@Autowired
 	private ProjectService projectService;
@@ -47,6 +50,12 @@ public class ProjectServiceUpdateTest extends AppTestUnitaryApplicationTests {
 
 	private List<Project> projectsSaved;
 
+	@Autowired
+	private ProjectRepository projectRepository;
+
+	@Autowired
+	private PersonProjectRepository personProjectRepository;
+
 	@Before
 	public void setUp() {
 		getReady();
@@ -58,7 +67,13 @@ public class ProjectServiceUpdateTest extends AppTestUnitaryApplicationTests {
 		peopleToProjectOne = Arrays.asList(person1, person2, person3);
 		peopleToProjectTwo = Arrays.asList(person2, person3, person4);
 		peopleToProjectThree = Arrays.asList(person3, person4, person5);
-		peopleToProjectFour = Arrays.asList(person4, person5, person6);	
+		peopleToProjectFour = Arrays.asList(person4, person5, person6);
+	}
+
+	@After
+	public void end() {
+		personProjectRepository.deleteAll();
+		projectRepository.deleteAll();
 	}
 
 	@Test
@@ -106,7 +121,7 @@ public class ProjectServiceUpdateTest extends AppTestUnitaryApplicationTests {
 		Project projectsSaved = projectService.save(projectOne);
 
 		assertNotNull(projectsSaved);
-		assertThat(projectsSaved.getPeople().size(), is(peopleToProjectOneWithNewPerson.size()));
+		assertThat(peopleToProjectOneWithNewPerson.size(), is(projectsSaved.getPeople().size()));
 	}
 
 	@Test
@@ -120,7 +135,7 @@ public class ProjectServiceUpdateTest extends AppTestUnitaryApplicationTests {
 		Project projectsSaved = projectService.save(projectTwo);
 
 		assertNotNull(projectsSaved);
-		assertThat(projectsSaved.getPeople().size(), is(peopleToProjectOneWithNewPerson.size()));
+		assertThat(peopleToProjectOneWithNewPerson.size(), is(projectsSaved.getPeople().size()));
 	}
 
 	private void getReady() {

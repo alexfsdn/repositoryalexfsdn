@@ -11,20 +11,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.apptestunitary.AppTestUnitaryApplicationTests;
+import com.apptestunitary.AppTests;
 import com.apptestunitary.enums.DataFormatoEnum;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
+import com.apptestunitary.repository.PersonRepository;
 import com.apptestunitary.service.PersonService;
 
-public class PersonServiceFindTest extends AppTestUnitaryApplicationTests {
+public class PersonServiceFindTest extends AppTests {
 
 	@Autowired
 	private PersonService personService;
+
+	@Autowired
+	private PersonRepository personRepository;
 
 	private Person personSaved;
 
@@ -38,6 +43,11 @@ public class PersonServiceFindTest extends AppTestUnitaryApplicationTests {
 
 		Person person = new Person("Alex", 21, emails);
 		personSaved = personService.save(person);
+	}
+
+	@After
+	public void end() {
+		personRepository.deleteAll();
 	}
 
 	@Test

@@ -17,16 +17,11 @@ import com.apptestunitary.repository.PersonRepository;
 @Service
 public class PersonService {
 
+	@Autowired
 	private PersonRepository personRepository;
 
-	private EmailService emailService;
-
 	@Autowired
-	public PersonService(PersonRepository personRepository, EmailService emailService) {
-		super();
-		this.personRepository = personRepository;
-		this.emailService = emailService;
-	}
+	private EmailService emailService;
 
 	@Transactional
 	public Person save(Person person) {

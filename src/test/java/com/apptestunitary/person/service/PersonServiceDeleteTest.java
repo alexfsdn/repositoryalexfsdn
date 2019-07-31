@@ -12,13 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.apptestunitary.AppTestUnitaryApplicationTests;
+import com.apptestunitary.AppTests;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
 import com.apptestunitary.service.EmailService;
 import com.apptestunitary.service.PersonService;
 
-public class PersonServiceDeleteTest extends AppTestUnitaryApplicationTests {
+public class PersonServiceDeleteTest extends AppTests{
 
 	@Autowired
 	private PersonService personService;
@@ -41,10 +41,10 @@ public class PersonServiceDeleteTest extends AppTestUnitaryApplicationTests {
 
 	@Test
 	public void mustDeletePersonByIdPerson() {
-
 		final Long ID_PERSON = personSaved.getId();
 
 		personService.deletePerson(ID_PERSON);
+
 		Optional<Person> personRemoved = personService.findPerson(ID_PERSON);
 		List<Email> emails = emailService.findEmailsByIdPerson(ID_PERSON);
 

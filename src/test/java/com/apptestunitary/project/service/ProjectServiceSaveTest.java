@@ -9,24 +9,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.TransactionSystemException;
 
-import com.apptestunitary.AppTestUnitaryApplicationTests;
+import com.apptestunitary.AppTests;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
 import com.apptestunitary.model.Project;
+import com.apptestunitary.repository.PersonProjectRepository;
+import com.apptestunitary.repository.ProjectRepository;
 import com.apptestunitary.service.PersonService;
 import com.apptestunitary.service.ProjectService;
 
-public class ProjectServiceSaveTest extends AppTestUnitaryApplicationTests {
+public class ProjectServiceSaveTest extends AppTests {
 
 	@Autowired
 	private ProjectService projectService;
 
 	@Autowired
 	private PersonService personService;
+
+	@Autowired
+	private ProjectRepository projectRepository;
+
+	@Autowired
+	private PersonProjectRepository personProjectRepository;
 
 	private Person person1;
 	private Person person2;
@@ -61,6 +69,12 @@ public class ProjectServiceSaveTest extends AppTestUnitaryApplicationTests {
 
 	}
 
+	@After
+	public void end() {
+		personProjectRepository.deleteAll();
+		projectRepository.deleteAll();
+	}
+
 	@Test
 	public void mustSaveProjectsWithPeople() {
 		getReady();
@@ -71,12 +85,6 @@ public class ProjectServiceSaveTest extends AppTestUnitaryApplicationTests {
 		Project projectSaved = projectService.save(project);
 
 		assertNotNull(projectSaved);
-	}
-
-	@Test(expected = TransactionSystemException.class)
-	public void shouldNotSaveProjectWithValuesNull() {
-		final Project PROJECT_WITH_VALUES_NULL = new Project();
-		projectService.save(PROJECT_WITH_VALUES_NULL);
 	}
 
 	private void getReady() {

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.ProjectURIEnum;
 import com.apptestunitary.model.Email;
 import com.apptestunitary.model.Person;
@@ -62,7 +61,7 @@ public class ProjectDeleteControllerTest extends AppTestUnitaryApplicationTests 
 	public void mustDeletePersonByIdProject() throws URISyntaxException {
 
 		final Long ID_PROJECT = projectSaved.getId();
-		final URI uri = new URI(BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_PROJECT.getUrl());
+		final URI uri = new URI(ProjectURIEnum.URL_PROJECT.getUrl());
 
 		restTemplate.delete(uri + "" + ID_PROJECT);
 

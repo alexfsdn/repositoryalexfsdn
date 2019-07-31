@@ -42,13 +42,13 @@ public class PersonVOUtilTest {
 
 		PersonVO personVO = PersonVOUtil.buildPersonVO(person);
 
-		assertThat(personVO.getId(), is(person.getId()));
-		assertThat(personVO.getNamePerson(), is(person.getNamePerson()));
-		assertThat(personVO.getAge(), is(person.getAge()));
-		assertThat(personVO.getRegistrationDate().getTime(), is(person.getRegistrationDate().getTime()));
-		assertThat(personVO.getDateOfLastEdition().getTime(), is(person.getDateOfLastEdition().getTime()));
+		assertThat(person.getId(), is(personVO.getId()));
+		assertThat(person.getNamePerson(), is(personVO.getNamePerson()));
+		assertThat(person.getAge(), is(personVO.getAge()));
+		assertThat(person.getRegistrationDate().getTime(), is(personVO.getRegistrationDate().getTime()));
+		assertThat(person.getDateOfLastEdition().getTime(), is(personVO.getDateOfLastEdition().getTime()));
 		assertNotNull(personVO.getEmailsVO());
-		assertThat(personVO.getEmailsVO().size(), is(person.getEmails().size()));
+		assertThat(person.getEmails().size(), is(personVO.getEmailsVO().size()));
 		personVO.getEmailsVO().forEach(e -> {
 			assertTrue(e.getEmailName().toLowerCase().equals(EMAIL_NAME_1.toLowerCase())
 					|| e.getEmailName().toLowerCase().equals(EMAIL_NAME_2.toLowerCase()));

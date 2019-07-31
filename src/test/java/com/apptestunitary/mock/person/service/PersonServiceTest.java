@@ -2,7 +2,6 @@ package com.apptestunitary.mock.person.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +13,11 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.TransactionSystemException;
 
 import com.apptestunitary.model.Email;
@@ -22,10 +26,18 @@ import com.apptestunitary.repository.PersonRepository;
 import com.apptestunitary.service.EmailService;
 import com.apptestunitary.service.PersonService;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class PersonServiceTest {
 
+	@MockBean
 	private PersonRepository personRepository;
+
+	@MockBean
 	private EmailService emailService;
+
+	@Autowired
+	private PersonService personService;
 
 	private Person person;
 	private Person personSaved;
@@ -50,19 +62,17 @@ public class PersonServiceTest {
 		mockEmailsSaved();
 		mockPersonSaved();
 
-		personRepository = mock(PersonRepository.class);
 		when(personRepository.save(person)).thenReturn(personSaved);
 		when(personRepository.save(PERSON_WITH_VALUES_NULL)).thenThrow(TransactionSystemException.class);
 		when(personRepository.save(personSaved)).thenReturn(personSaved);
 
-		emailService = mock(EmailService.class);
 		when(emailService.saveList(emails)).thenReturn(emailsSaved);
 	}
 
 	@Test
 	public void mustSavePersonWithEmails() {
 
-		Person personSaved = new PersonService(personRepository, emailService).save(person);
+		Person personSaved = personService.save(person);
 
 		assertNotNull(personSaved);
 		assertNotNull(personSaved.getEmails());
@@ -76,7 +86,7 @@ public class PersonServiceTest {
 
 		person.getEmails().clear();
 
-		new PersonService(personRepository, emailService).save(person);
+		personService.save(person);
 
 		verify(personRepository, times(1)).save(any());
 		verify(emailService, times(0)).saveList(any());
@@ -86,7 +96,7 @@ public class PersonServiceTest {
 	@Test(expected = TransactionSystemException.class)
 	public void shouldNotSavePersonWithValuesNull() {
 
-		new PersonService(personRepository, emailService).save(PERSON_WITH_VALUES_NULL);
+		personService.save(PERSON_WITH_VALUES_NULL);
 
 		verify(personRepository, times(1)).save(any());
 		verify(emailService, times(0)).saveList(any());
@@ -96,7 +106,7 @@ public class PersonServiceTest {
 	@Test
 	public void mustRunEmailSericeTwiceInWhenUpdatePerson() {
 
-		new PersonService(personRepository, emailService).save(personSaved);
+		personService.save(personSaved);
 
 		verify(personRepository, times(1)).save(any());
 		verify(emailService, times(1)).saveList(any());
@@ -110,8 +120,8 @@ public class PersonServiceTest {
 		final Timestamp SECOND_PERIOD_NULL = null;
 		final String NAME_PERSON_TO_SEARCH = "Ale";
 
-		new PersonService(personRepository, emailService).findPersonByNameAndDateOfLastEdition(NAME_PERSON_TO_SEARCH,
-				FIRST_PERIOD_NULL, SECOND_PERIOD_NULL);
+		personService.findPersonByNameAndDateOfLastEdition(NAME_PERSON_TO_SEARCH, FIRST_PERIOD_NULL,
+				SECOND_PERIOD_NULL);
 
 		verify(personRepository, times(0)).findPersonByNameAndDateOfLastEdition(
 				NAME_PERSON_TO_SEARCH.toLowerCase().trim(), FIRST_PERIOD_NULL, SECOND_PERIOD_NULL);
@@ -125,8 +135,7 @@ public class PersonServiceTest {
 		final Timestamp SECOND_PERIOD = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		final String NAME_PERSON_TO_SEARCH = "Ale";
 
-		new PersonService(personRepository, emailService).findPersonByNameAndDateOfLastEdition(NAME_PERSON_TO_SEARCH,
-				FIRST_PERIOD, SECOND_PERIOD);
+		personService.findPersonByNameAndDateOfLastEdition(NAME_PERSON_TO_SEARCH, FIRST_PERIOD, SECOND_PERIOD);
 
 		verify(personRepository, times(1)).findPersonByNameAndDateOfLastEdition(
 				NAME_PERSON_TO_SEARCH.toLowerCase().trim(), FIRST_PERIOD, SECOND_PERIOD);
@@ -140,8 +149,7 @@ public class PersonServiceTest {
 		final Timestamp SECOND_PERIOD_NULL = null;
 		final String NAME_PERSON_TO_SEARCH = "Ale";
 
-		new PersonService(personRepository, emailService).findPersonByNameAndRegistrationDate(NAME_PERSON_TO_SEARCH,
-				FIRST_PERIOD_NULL, SECOND_PERIOD_NULL);
+		personService.findPersonByNameAndRegistrationDate(NAME_PERSON_TO_SEARCH, FIRST_PERIOD_NULL, SECOND_PERIOD_NULL);
 
 		verify(personRepository, times(0)).findPersonByNameAndDateOfLastEdition(
 				NAME_PERSON_TO_SEARCH.toLowerCase().trim(), FIRST_PERIOD_NULL, SECOND_PERIOD_NULL);
@@ -155,8 +163,8 @@ public class PersonServiceTest {
 		final Timestamp SECOND_PERIOD_NULL = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		final String NAME_PERSON_TO_SEARCH = "Ale";
 
-		new PersonService(personRepository, emailService).findPersonByNameAndDateOfLastEdition(NAME_PERSON_TO_SEARCH,
-				FIRST_PERIOD_NULL, SECOND_PERIOD_NULL);
+		personService.findPersonByNameAndDateOfLastEdition(NAME_PERSON_TO_SEARCH, FIRST_PERIOD_NULL,
+				SECOND_PERIOD_NULL);
 
 		verify(personRepository, times(1)).findPersonByNameAndDateOfLastEdition(
 				NAME_PERSON_TO_SEARCH.toLowerCase().trim(), FIRST_PERIOD_NULL, SECOND_PERIOD_NULL);

@@ -11,19 +11,28 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.apptestunitary.AppTestUnitaryApplicationTests;
+import com.apptestunitary.AppTests;
 import com.apptestunitary.enums.DataFormatoEnum;
 import com.apptestunitary.model.Project;
+import com.apptestunitary.repository.PersonProjectRepository;
+import com.apptestunitary.repository.ProjectRepository;
 import com.apptestunitary.service.ProjectService;
 
-public class ProjectServiceFindTest extends AppTestUnitaryApplicationTests {
+public class ProjectServiceFindTest extends AppTests {
 
 	@Autowired
 	private ProjectService projectService;
+
+	@Autowired
+	private ProjectRepository projectRepository;
+
+	@Autowired
+	private PersonProjectRepository personProjectRepository;
 
 	private static final String NAME_UPPERCASE = "ONE";
 	private static final String NAME_LOWERCASE = "one";
@@ -50,12 +59,19 @@ public class ProjectServiceFindTest extends AppTestUnitaryApplicationTests {
 		SECOND_PERIOD = new Timestamp(simpleDateFormatForSecondPeriod.parse(DATE_FOR_SECOND_PERIOD).getTime());
 	}
 
+	@After
+	public void end() {
+		personProjectRepository.deleteAll();
+		projectRepository.deleteAll();
+	}
+
 	@Test
 	public void mustFindProjectById() {
-		Project project = projectService.findProject(projectSaved.getId()).get();
+		final Long ID_PROJECT = projectSaved.getId();
+		Project project = projectService.findProject(ID_PROJECT).get();
 
 		assertNotNull(project);
-		assertThat(project.getId(), is(projectSaved.getId()));
+		assertThat(projectSaved.getId(), is(project.getId()));
 	}
 
 	@Test

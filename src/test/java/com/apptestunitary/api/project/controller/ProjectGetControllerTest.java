@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.apptestunitary.AppTestUnitaryApplicationTests;
 import com.apptestunitary.enums.DataFormatoEnum;
-import com.apptestunitary.enums.url.BaseUrlEnum;
 import com.apptestunitary.enums.url.ProjectURIEnum;
 import com.apptestunitary.model.Project;
+import com.apptestunitary.repository.PersonProjectRepository;
+import com.apptestunitary.repository.ProjectRepository;
 import com.apptestunitary.service.ProjectService;
 import com.apptestunitary.vo.ProjectVO;
 
@@ -55,6 +57,12 @@ public class ProjectGetControllerTest extends AppTestUnitaryApplicationTests {
 
 	private Project projectSaved;
 
+	@Autowired
+	private ProjectRepository projectRepository;
+
+	@Autowired
+	private PersonProjectRepository personProjectRepository;
+
 	@Before
 	public void setUp() {
 		final Project PROJECT_ONE = new Project("Project One");
@@ -72,11 +80,17 @@ public class ProjectGetControllerTest extends AppTestUnitaryApplicationTests {
 		SECOND_PERIOD = new Timestamp(simpleDateFormatForSecondPeriod.parse(DATE_FOR_SECOND_PERIOD).getTime());
 	}
 
+	@After
+	public void end() {
+		personProjectRepository.deleteAll();
+		projectRepository.deleteAll();
+	}
+
 	@Test
 	public void mustFindProjectById() throws URISyntaxException {
 
 		final Long ID_PROJECT = projectSaved.getId();
-		final URI uri = new URI(BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_PROJECT.getUrl());
+		final URI uri = new URI(ProjectURIEnum.URL_PROJECT.getUrl());
 
 		ResponseEntity<ProjectVO> result = restTemplate.getForEntity(uri + "" + ID_PROJECT, ProjectVO.class);
 		ProjectVO projectVO = result.getBody();
@@ -89,7 +103,7 @@ public class ProjectGetControllerTest extends AppTestUnitaryApplicationTests {
 	@Test
 	public void mustFindProjectByName() throws URISyntaxException {
 
-		final URI uri = new URI(BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_GET_BY_NAME.getUrl());
+		final URI uri = new URI(ProjectURIEnum.URL_GET_BY_NAME.getUrl());
 		final HttpEntity<ProjectVO> projectVO = null;
 
 		ResponseEntity<List<ProjectVO>> result = restTemplate.exchange(uri + "" + NAME_TO_SEARCH, HttpMethod.GET,
@@ -109,8 +123,8 @@ public class ProjectGetControllerTest extends AppTestUnitaryApplicationTests {
 	@Test
 	public void mustFindProjectByNameAndDateOfLastEdition() throws ParseException {
 
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(
-				BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_GET_BY_NAME_AND_DATE_OF_LAST_EDITION.getUrl());
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(ProjectURIEnum.URL_GET_BY_NAME_AND_DATE_OF_LAST_EDITION.getUrl());
 
 		uriComponentsBuilder.queryParam(NAME_LABEL, NAME_TO_SEARCH);
 		uriComponentsBuilder.queryParam(FIRST_PERIOD_LABEL, FIRST_PERIOD.getTime());
@@ -137,8 +151,8 @@ public class ProjectGetControllerTest extends AppTestUnitaryApplicationTests {
 	@Test
 	public void mustFindProjectByNameAndDateOfRegistration() throws ParseException {
 
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(
-				BaseUrlEnum.URL_BASE.getUrl() + ProjectURIEnum.URL_GET_BY_NAME_AND_REGISTRATION_DATE.getUrl());
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(ProjectURIEnum.URL_GET_BY_NAME_AND_REGISTRATION_DATE.getUrl());
 
 		uriComponentsBuilder.queryParam(NAME_LABEL, NAME_TO_SEARCH);
 		uriComponentsBuilder.queryParam(FIRST_PERIOD_LABEL, FIRST_PERIOD.getTime());
