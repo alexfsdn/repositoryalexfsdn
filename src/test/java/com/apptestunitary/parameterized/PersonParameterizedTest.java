@@ -10,6 +10,7 @@ import com.apptestunitary.api.person.controller.PersonGetControllerTest;
 import com.apptestunitary.api.person.controller.PersonPutControllerTest;
 import com.apptestunitary.api.person.controller.PersonSaveControllerTest;
 import com.apptestunitary.mockito.person.service.PersonServiceTest;
+import com.apptestunitary.person.repository.PersonRepositoryTest;
 import com.apptestunitary.person.service.PersonServiceDeleteTest;
 import com.apptestunitary.person.service.PersonServiceFindTest;
 import com.apptestunitary.person.service.PersonServiceSaveTest;
@@ -19,7 +20,7 @@ import com.apptestunitary.person.service.PersonServiceUpdateTest;
 @SuiteClasses({ PersonServiceTest.class, PersonServiceSaveTest.class, PersonServiceDeleteTest.class,
 		PersonServiceFindTest.class, PersonServiceUpdateTest.class, PersonControllerTest.class,
 		PersonDeleteControllerTest.class, PersonGetControllerTest.class, PersonSaveControllerTest.class,
-		PersonPutControllerTest.class })
+		PersonPutControllerTest.class, PersonRepositoryTest.class })
 public class PersonParameterizedTest {
 
 }
