@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -103,7 +104,7 @@ public class ProjectController {
 
 	@GetMapping(value = "/nameProject/{name}", produces = "application/json")
 	public ResponseEntity<List<ProjectVO>> findByName(@PathVariable("name") String name) {
-		if (ValidationUtil.isEmpty(name)) {
+		if (StringUtils.isEmpty(name)) {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
 

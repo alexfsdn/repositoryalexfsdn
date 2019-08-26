@@ -5,6 +5,8 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.springframework.util.StringUtils;
+
 import com.apptestunitary.vo.EmailVO;
 
 public class ValidationEmailVOUtil {
@@ -35,7 +37,7 @@ public class ValidationEmailVOUtil {
 		if (emailVO == null) {
 			return true;
 		}
-		if (ValidationUtil.isEmpty(emailVO.getEmailName())) {
+		if (StringUtils.isEmpty(emailVO.getEmailName())) {
 			return true;
 		}
 		return false;

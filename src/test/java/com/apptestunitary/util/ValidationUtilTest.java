@@ -14,22 +14,6 @@ import com.apptestunitary.util.ValidationUtil;
 public class ValidationUtilTest {
 
 	@Test
-	public void shouldNotEmptyValue() {
-		boolean result = ValidationUtil.isEmpty(null);
-		boolean result2 = ValidationUtil.isEmpty("");
-
-		assertTrue(result);
-		assertTrue(result2);
-	}
-
-	@Test
-	public void allowFullValue() {
-		boolean result = ValidationUtil.isEmpty("Test Unitary");
-
-		assertFalse(result);
-	}
-
-	@Test
 	public void shouldNotNegativeValue() {
 		boolean result = ValidationUtil.isNegative(0L);
 		boolean result2 = ValidationUtil.isNegative(-1L);

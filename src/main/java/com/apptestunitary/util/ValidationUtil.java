@@ -5,13 +5,6 @@ import java.util.List;
 
 public class ValidationUtil {
 
-	public static boolean isEmpty(String valor) {
-		if (valor == null || valor.isEmpty())
-			return true;
-		else
-			return false;
-	}
-
 	public static boolean isNegative(Long valor) {
 		if (valor <= 0) {
 			return true;

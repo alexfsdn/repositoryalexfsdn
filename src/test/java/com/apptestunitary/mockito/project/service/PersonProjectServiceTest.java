@@ -1,4 +1,4 @@
-package com.apptestunitary.mock.project.service;
+package com.apptestunitary.mockito.project.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

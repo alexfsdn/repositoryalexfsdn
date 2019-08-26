@@ -1,4 +1,4 @@
-package com.apptestunitary.mock.person.service;
+package com.apptestunitary.mockito.person.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;

@@ -2,6 +2,8 @@ package com.apptestunitary.util;
 
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import com.apptestunitary.vo.ProjectVO;
 
 public class ValidationProjectVOUtil {
@@ -11,7 +13,7 @@ public class ValidationProjectVOUtil {
 			return false;
 		}
 
-		if (ValidationUtil.isEmpty(projectVO.getName())) {
+		if (StringUtils.isEmpty(projectVO.getName())) {
 			return false;
 		}
 

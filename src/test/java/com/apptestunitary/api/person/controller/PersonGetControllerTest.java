@@ -72,8 +72,8 @@ public class PersonGetControllerTest extends AppTestUnitaryApplicationTests {
 		emails.add(new Email(EMAIL_NAME_1));
 		emails.add(new Email(EMAIL_NAME_2));
 
-		Person personToUpdate = new Person(NAME, AGE, emails);
-		personSaved = personService.save(personToUpdate);
+		Person personToSave = new Person(NAME, AGE, emails);
+		personSaved = personService.save(personToSave);
 	}
 
 	@Before

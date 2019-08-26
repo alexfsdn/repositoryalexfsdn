@@ -1,5 +1,7 @@
 package com.apptestunitary.util;
 
+import org.springframework.util.StringUtils;
+
 import com.apptestunitary.vo.PersonVO;
 
 public class ValidationPersonVOUtil {
@@ -11,7 +13,7 @@ public class ValidationPersonVOUtil {
 		if (personVO.getEmailsVO() == null || personVO.getEmailsVO().size() <= 0) {
 			return false;
 		}
-		if (ValidationUtil.isEmpty(personVO.getNamePerson())) {
+		if (StringUtils.isEmpty(personVO.getNamePerson())) {
 			return false;
 		}
 		if (personVO.getAge() <= 0) {
