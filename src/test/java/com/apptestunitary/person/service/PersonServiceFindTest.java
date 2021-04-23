@@ -74,7 +74,7 @@ public class PersonServiceFindTest extends AppTests {
 	public void mustFindPersonByNamePersonAndDateOfLastEdition() throws ParseException {
 
 		final String DATE_FOR_FIRST_PERIOD = "2018-01-01 00:00:11.763";
-		final String DATE_FOR_SECOND_PERIOD = "2019-09-01 00:00:11.763";
+		final String DATE_FOR_SECOND_PERIOD = "2021-09-01 00:00:11.763";
 		Timestamp firstPeriod = null;
 		Timestamp secondPeriod = null;
 
