@@ -49,7 +49,7 @@ public class PersonGetControllerTest extends AppTestUnitaryApplicationTests {
 	private static final String NAME_TO_SEARCH = "Ale";
 
 	private static final String DATE_FOR_FIRST_PERIOD = "2018-01-01 00:00:11.763";
-	private static final String DATE_FOR_SECOND_PERIOD = "2020-07-13 00:00:11.763";
+	private static final String DATE_FOR_SECOND_PERIOD = "2021-07-13 00:00:11.763";
 
 	private static Timestamp FIRST_PERIOD = null;
 	private static Timestamp SECOND_PERIOD = null;
