@@ -1,4 +1,4 @@
-package com.apptestunitary.parameterized;
+package com.apptestunitary.suite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -12,6 +12,6 @@ import com.apptestunitary.util.ValidationUtilTest;
 @RunWith(Suite.class)
 @SuiteClasses({ PersonUtilTest.class, PersonVOUtilTest.class, ValidationPersonVOUtilTest.class,
 		ValidationUtilTest.class })
-public class UtilParameterizedTest {
+public class UtilSuiteTest {
 
 }

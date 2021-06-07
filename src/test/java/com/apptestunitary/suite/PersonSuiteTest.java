@@ -1,4 +1,4 @@
-package com.apptestunitary.parameterized;
+package com.apptestunitary.suite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -21,6 +21,6 @@ import com.apptestunitary.person.service.PersonServiceUpdateTest;
 		PersonServiceFindTest.class, PersonServiceUpdateTest.class, PersonControllerTest.class,
 		PersonDeleteControllerTest.class, PersonGetControllerTest.class, PersonSaveControllerTest.class,
 		PersonPutControllerTest.class, PersonRepositoryTest.class })
-public class PersonParameterizedTest {
+public class PersonSuiteTest {
 
 }
